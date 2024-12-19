@@ -30,10 +30,13 @@
             <x-nav-link :href="route('dashboard')" :active="request()->routeIs('rooms.uncleaned')" role="director" text="Unclean Rooms" />
             <x-nav-link :href="route('dashboard')" :active="request()->routeIs('notices')" role="director" text="Important Notices" />
 
-            <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" role="building_manager" text="Dashboard" />
+            <x-nav-link :href="route('floors.index')" :active="request()->routeIs('dashboard')" role="building_manager" text="Dashboard" />
             <x-nav-link :href="route('dashboard')" :active="request()->routeIs('rooms.cleaned')" role="building_manager" text="Rooms Cleaned" />
             <x-nav-link :href="route('dashboard')" :active="request()->routeIs('rooms.uncleaned')" role="building_manager" text="Unclean Rooms" />
-            <x-nav-link :href="route('dashboard')" :active="request()->routeIs('notices')" role="building_manager" text="Important Notices" />
+
+
+            <x-nav-link :href="route('assignmentreviews.index')" :active="request()->routeIs('notices')" role="floor_manager" text="Assignments" />
+            <x-nav-link :href="route('rooms.index')" :active="request()->routeIs('notices')" role="floor_manager" text="Rooms" />
 
 
             <!-- Add other links here similarly -->
@@ -56,19 +59,19 @@
                 </x-slot>
 
                 <x-slot name="content">
-                    <x-dropdown-link :href="route('profile.edit')">
-                        {{ __('Profile') }}
-                    </x-dropdown-link>
 
+                <x-dropdown-link href="{{ route('rooms.create') }}"  role="floor_manager" text="Add Room" />
+                <x-dropdown-link href="{{ route('rooms.assign-students.form') }}"  role="floor_manager" text="Register Student" />
+
+                <a href="{{ route('profile.edit') }}" class="block w-full px-4 py-2 text-start text-sm leading-5 text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 transition duration-150 ease-in-out">
+                  {{ __('Profile') }}
+                </a>
                     <!-- Authentication -->
-                    <form method="POST" action="{{ route('logout') }}">
-                        @csrf
-
-                        <x-dropdown-link :href="route('logout')"
-                                onclick="event.preventDefault();
-                                            this.closest('form').submit();">
-                            {{ __('Log Out') }}
-                        </x-dropdown-link>
+                    <form method="POST" action="{{ route('logout') }}" class="block w-full">
+                     @csrf
+                      <button type="submit" class="block w-full px-4 py-2 text-start text-sm leading-5 text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 transition duration-150 ease-in-out">
+                     {{ __('Logout') }}
+                      </button>
                     </form>
                 </x-slot>
             </x-dropdown>

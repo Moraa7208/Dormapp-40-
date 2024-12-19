@@ -41,11 +41,11 @@ class AuthenticatedSessionController extends Controller
         }
 
         if ($user->hasRole('floor_manager')) {
-            return redirect()->route('floor_manager.dashboard');
+            return redirect()->route('assignmentreviews.index');
         }
 
         // Default to student dashboard
-        return redirect()->route('student.dashboard');
+        return redirect()->route('student.room');
     }
 
     /**

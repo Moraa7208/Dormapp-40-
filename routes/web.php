@@ -3,26 +3,26 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Buildings\BuildingController;
-use App\Http\Controllers\Buildings\RoleController;
+use App\Http\Controllers\Buildings\RoleController as BuildingsRoleController;;
+use App\Http\Controllers\Floor\RoleController as FloorRoleController;
 use App\Http\Controllers\Floor\FloorController;
+use App\Http\Controllers\Room\RoomController;
+use App\Http\Controllers\Room\AssignmentReviewController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "web" middleware group. Make something great!
-|
-*/
+use App\Http\Controllers\Assignment\AssignmentController;
+use App\Http\Controllers\Assignment\StudentAssignmentController;
+use App\Http\Controllers\Assignment\ManagerAssignmentController;
+use App\Http\Controllers\StudentController;
+
+
 
 Route::get('/', function () {
     return view('welcome');
 });
+
 Route::get('/login', [AuthenticatedSessionController::class, 'create'])
-    ->middleware('guest')
-    ->name('login');
+->middleware('guest')
+->name('login');
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -34,33 +34,38 @@ Route::middleware(['auth'])->group(function () {
     })->name('dashboard');
 
     Route::middleware(['role:director'])->group(function () {
-    Route::resource('buildings',BuildingController::class)
-    ->only(['index', 'create', 'store']);
-    // routes/web.php
-    Route::get('/assign-roles', [RoleController::class, 'showAssignRoleForm'])->name('assign.roles.form');
-    Route::post('/assign-roles', [RoleController::class, 'assignRole'])->name('assign.roles');
-
+        Route::resource('buildings',BuildingController::class)
+        ->only(['index', 'create', 'store']);
+        // routes/web.php
+        Route::get('/buildings/assign-roles', [BuildingsRoleController::class, 'showAssignRoleForm'])->name('buildings.assign.roles.form');
+        Route::post('/buildings/assign-roles', [BuildingsRoleController::class, 'assignRole'])->name('buildings.assign.roles');
     });
 
     Route::middleware(['role:building_manager'])->group(function () {
-    Route::resource('floors',FloorController::class)
-    ->only(['index', 'create', 'store']);
+        Route::resource('floors',FloorController::class)
+        ->only(['index', 'create', 'store']);
+        Route::get('/floors/assign-roles', [FloorRoleController::class, 'showAssignRoleForm'])->name('floor.assign.roles.form');
+        Route::post('/floors/assign-roles', [FloorRoleController::class, 'assignRole'])->name('floor.assign.roles');
     });
 
+    Route::middleware(['role:floor_manager'])->group(function () {
+        // Route::get('assignments/{assignmentId}/review', [ManagerAssignmentController::class, 'create'])->name('reviews.create');
+        // Route::post('assignments/{assignmentId}/review', [ManagerAssignmentController::class, 'store'])->name('reviews.store');
 
-//     Route::middleware(['role:building_manager'])->group(function () {
-//     Route::get('/building_manager/dashboard', function () {
-//         return view('BuildingManafer.dashboard');
-//     })->name('building_manager.dashboard');
-// });
-    Route::get('/floor_manager/dashboard', function () {
-        return 'Hello from Floor Manager Dashboard';
-    })->name('floor_manager.dashboard');
+        Route::resource('assignmentreviews', AssignmentReviewController::class);
 
-    Route::get('/student/dashboard', function () {
-        return 'Hello from Student Dashboard';
-    })->name('student.dashboard');
+        Route::resource('rooms',RoomController::class)
+        ->only(['index', 'create', 'store', 'show']);
+
+        Route::get('rooms/assign-students', [RoomController::class, 'assignStudentsForm'])->name('rooms.assign-students.form');
+        Route::post('rooms/assign-students', [RoomController::class, 'assignStudents'])->name('rooms.assign-students');
+    });
+
+    Route::middleware(['role:student'])->group(function () {
+        Route::get('/student/room', [AssignmentController::class, 'assignCleaningTask'])->name('student.room');
+        Route::get('/student/room/{assignmentId}/upload-photos-form', [StudentAssignmentController::class, 'showUploadForm'])->name('student.upload_photos_form');
+        Route::post('/assignments/{assignmentId}/upload-photos', [StudentAssignmentController::class, 'uploadCleaningPhotos'])->name('student.upload_photos');
+    });
 });
-
 
 require __DIR__.'/auth.php';

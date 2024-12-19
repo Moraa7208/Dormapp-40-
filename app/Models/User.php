@@ -33,6 +33,16 @@ class User extends Authenticatable
     return $this->hasOne(Floor::class, 'manager_id');
 }
 
+public function room()
+{
+    return $this->belongsTo(Room::class);
+}
+
+public function assignments()
+{
+    return $this->hasMany(Assignment::class);
+}
+
 public function scopeAvailableManagers($query)
 {
     return $query->role('building_manager')->whereDoesntHave('building');

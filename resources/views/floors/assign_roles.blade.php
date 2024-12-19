@@ -11,7 +11,7 @@
         </div>
     @endif
 
-    <form action="{{ route('buildings.assign.roles') }}" method="POST" class="bg-white p-6 rounded shadow-lg">
+    <form action="{{ route('floor.assign.roles') }}" method="POST" class="bg-white p-6 rounded shadow-lg">
         @csrf
 
         <div class="mb-4">
