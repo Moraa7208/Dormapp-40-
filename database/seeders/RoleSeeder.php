@@ -19,16 +19,15 @@ class RoleSeeder extends Seeder
         $floor_manager = Role::create(['name' => 'floor_manager']);
         $student = Role::create(['name' => 'student']);
 
-        $permissions = ['view dashboard', 'assign tasks', 'manage users'];
+        // $permissions = ['view dashboard', 'assign tasks', 'manage users'];
 
-        foreach ($permissions as $permission) {
-            Permission::create(['name' => $permission]);
-        }
+        // foreach ($permissions as $permission) {
+        //     Permission::create(['name' => $permission]);
+        // }
 
         // $director->givePermissionTo(Permission::all());
         // $building_manager->givePermissionTo(['manage rooms', 'assign tasks']);
         // $floor_manager->givePermissionTo(['assign tasks']);
         // $student->givePermissionTo(['view reports']);
-
     }
 }

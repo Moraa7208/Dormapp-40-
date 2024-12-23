@@ -53,10 +53,12 @@
                     </p>
                     @endif
                 </div>
+                @can('upload', $assignment)
                 <a href="{{ route('student.upload_photos_form', ['assignmentId' => $assignment->id]) }}"
                    class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition-colors">
                     Upload Cleaning Photos
                 </a>
+                @endcan
             </div>
             @endif
         </div>

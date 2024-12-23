@@ -13,34 +13,24 @@ class AssignmentController extends Controller
 {
     public function assignCleaningTask()
     {
-        // Get the current user (student) and their room
+
         $student = auth()->user();
         $room = $student->room;
-        $roommates = $room->students; // Assume students relationship exists
-
-
-        // $AssignmentReview =
-        // Get today's date
+        $roommates = $room->students;
         $today = Carbon::today();
+        $stringtoday = Carbon::today()->toDateString();
 
-
-        // Check if an assignment already exists for today
         $existingAssignment = Assignment::where('room_id', $room->id)
         ->where('cleaning_date', $today)
         ->first();
 
-        $stringtoday = Carbon::today()->toDateString();
-
         if ($existingAssignment) {
             $hasMedia = $existingAssignment->media()->whereDate('created_at', $stringtoday)->exists();
-
             $hasUploadedReviews = AssignmentReview::where('assignment_id', $existingAssignment->id)
             ->whereDate('created_at', $today)
             ->exists();
-
             $review = \App\Models\AssignmentReview::where('assignment_id', $existingAssignment->id)->first();
             // @dd($hasUploadedReviews);
-
             return view('students.room', [
                 'room' => $room,
                 'assignment' => $existingAssignment,
